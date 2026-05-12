@@ -147,12 +147,13 @@
                             class="text-center text-sm text-gray-500 dark:text-gray-400 mt-4"
                         >
                             or
-                            <RouterLink
-                                :to="{ name: 'Home' }"
+                            <a
+                                href="#"
+                                @click.prevent="scrollToTrending"
                                 class="text-blue-600 hover:underline ml-1"
                             >
                                 Continue Shopping
-                            </RouterLink>
+                            </a>
                         </p>
                     </div>
                 </div>
@@ -231,6 +232,13 @@ const proceedToCheckout = () => {
     if (items.value.length > 0) {
         router.push({ name: "Checkout" });
     }
+};
+
+const scrollToTrending = () => {
+    router.push({
+    path: '/',
+    hash: '#trending-products'
+})
 };
 
 // formatCurrency moved to utils/formatters.js

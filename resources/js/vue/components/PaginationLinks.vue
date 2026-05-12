@@ -1,7 +1,7 @@
 <template>
     <div
         v-if="links.length > 3"
-        class="flex justify-center items-center gap-1 mt-6"
+        class="flex justify-center items-center gap-1"
     >
         <button
             v-for="(link, index) in links"

@@ -552,6 +552,7 @@ const deleteUser = async () => {
     } catch (err) {
         console.error("Error deleting user:", err);
         error.value = err.response?.data?.message || "Failed to delete user";
+        showDeleteConfirm.value = false;
     } finally {
         submitting.value = false;
     }

@@ -16,7 +16,7 @@ class OrderController extends Controller
         return Order::with('order_items.product')
             ->where('user_id', auth()->id())
             ->orderByDesc('created_at')
-            ->paginate(15);
+            ->paginate(3);
     }
 
     public function show($id)

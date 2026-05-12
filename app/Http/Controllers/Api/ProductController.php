@@ -7,37 +7,52 @@ use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use App\Traits\IsAdmin;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
     use IsAdmin;
     // Get all products with optional filters
-    public function index(Request $request)
+    public function index(Request $request): AnonymousResourceCollection
     {
-        $categoryId = $request->get('category_id') ?? $request->get('category');
-        $search = $request->get('search');
-        $sort = $request->filled('sort') && $request->sort !== 'null' ? $request->sort : 'id';
-        $order = $request->filled('order') && $request->order !== 'null' ? $request->order : 'desc';
-        $perPage = $request->get('per_page', 15);
+
+        [$sort, $order, $perPage] = $this->resolveSortingParams($request);
 
         $products = Product::with('category')
-            ->where('status', 'active')
-            ->when($categoryId && $categoryId !== 'null', function ($query) use ($categoryId) {
-                $query->where('category_id', $categoryId);
-            })
-            ->when($search && $search !== 'null', function ($query) use ($search) {
-                $query->where(function ($q) use ($search) {
-                    $q->where('name', 'like', "%{$search}%")
-                        ->orWhere('description', 'like', "%{$search}%");
-                });
-            })
+            ->active()
+            ->whenCategory($request->input('category_id') ?? $request->input('category'))
+            ->whenSearch($request->input('search'))
             ->orderBy($sort, $order)
             ->paginate($perPage);
 
         return ProductResource::collection($products)->additional([
             'message' => 'Products retrieved successfully'
         ]);
+    }
+
+    public function lowStock(Request $request): AnonymousResourceCollection
+    {
+        [$sort, $order, $perPage] = $this->resolveSortingParams($request);
+
+        $products = Product::with('category')
+            ->active()
+            ->whenCategory($request->input('category_id') ?? $request->input('category'))
+            ->whenSearch($request->input('search'))
+            ->lowStock()
+            ->orderBy($sort, $order)
+            ->paginate($perPage);
+
+        return ProductResource::collection($products)
+            ->additional(['message' => 'Low stock products retrieved successfully']);
+    }
+
+    private function resolveSortingParams(Request $request)
+    {
+        $sort = $request->filled('sort') && $request->sort !== 'null' ? $request->sort : 'id';
+        $order = $request->filled('order') && $request->order !== 'null' ? $request->order : 'desc';
+
+        return [$sort, $order, $request->integer('per_page', 15)];
     }
 
     // Get single product

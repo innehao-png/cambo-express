@@ -41,6 +41,20 @@ export const useProductStore = defineStore("product", {
             }
         },
 
+        async fetchLowStockProducts() {
+            this.loading = true;
+            try {
+                const response = await productService.getLowStockProducts(this.filters);
+                this.products = response.data.data;
+                this.pagination = response.data;
+                // console.log(this.products);
+            } catch (err) {
+                this.error = err.message;
+            } finally {
+                this.loading = false;
+            }
+        },
+
         async fetchCategories() {
             try {
                 const response = await productService.getCategories();

@@ -19,7 +19,7 @@ export const useAuthStore = defineStore('auth', {
         },
         async getProfile() {
             this.user = await authService.getProfile();
-            console.log("Auth User", this.user);
+            // console.log("Auth User", this.user);
         },
     },
     getters: {

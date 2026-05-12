@@ -1,6 +1,11 @@
+import apiClient from "../../axios";
+
 const productService = {
     getProducts(params) {
         return apiClient.get("/products",{ params });
+    },
+    getLowStockProducts(params) {
+        return apiClient.get("/products/low-stocks", { params });
     },
     createProduct(payload) {
         return apiClient.post("/products", payload, {
