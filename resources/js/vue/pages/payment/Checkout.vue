@@ -23,8 +23,16 @@
                     <div class="lg:w-2/3 space-y-6">
                         <h3 class="text-3xl font-semibold text-gray-900 mb-4">My Cart</h3>
 
-                        <div v-if="loading" class="text-center py-10 text-gray-400">
-                            Loading...
+                        <div v-if="loading" class="space-y-4">
+                            <div v-for="i in 3" :key="i"
+                                class="bg-white rounded-xl shadow p-6 flex flex-col md:flex-row gap-6 items-center">
+                                <Skeleton width="6rem" height="6rem" />
+                                <div class="flex-1 space-y-3 w-full">
+                                    <Skeleton width="60%" height="1.5rem" />
+                                    <Skeleton width="30%" height="1rem" />
+                                </div>
+                                <Skeleton width="4rem" height="1.5rem" />
+                            </div>
                         </div>
                         <div v-else-if="!items.length" class="text-center py-10 text-gray-400">
                             Your cart is empty.
@@ -139,7 +147,9 @@ import { useCartStore } from "../../api/stores/cartStore";
 import { formatCurrency } from "../../utils/formatters";
 import { parseError } from "../../utils/errors";
 import AlertMsg from "../../components/messages/AlertMsg.vue";
+import Skeleton from "../../components/ui/Skeleton.vue";
 import { useAlert } from "../../composables/useAlert";
+import { useTimer } from "../../composables/useTimer";
 import { paymentOptions } from "../../constants/paymentOptions";
 
 // ─────────────────────────────────────────────
@@ -175,32 +185,16 @@ const qrData = ref({
 // ─────────────────────────────────────────────
 // QR Expiry Timer
 // ─────────────────────────────────────────────
-const QR_LIFETIME_SECONDS = 3 * 60; // 1 minute in seconds
-const timeLeft = ref(0);
-const expired = ref(false);
-let countdown = null;
-
-const formattedTime = computed(() => {
-    const m = Math.floor(timeLeft.value / 60).toString().padStart(2, "0");
-    const s = (timeLeft.value % 60).toString().padStart(2, "0");
-    return `${m}:${s}`;
+const QR_LIFETIME_SECONDS = 3 * 60; // 3 minutes
+const {
+    timeLeft,
+    expired,
+    formattedTime,
+    startTimer,
+    stopTimer
+} = useTimer(QR_LIFETIME_SECONDS, () => {
+    stopPolling(); // stop polling when QR expires
 });
-
-function startTimer() {
-    if (countdown) clearInterval(countdown);
-    expired.value = false;
-    timeLeft.value = QR_LIFETIME_SECONDS;
-
-    countdown = setInterval(() => {
-        timeLeft.value--;
-        if (timeLeft.value <= 0) {
-            clearInterval(countdown);
-            countdown = null;
-            expired.value = true;
-            stopPolling(); // stop polling when QR expires
-        }
-    }, 1000);
-}
 
 // ─────────────────────────────────────────────
 // Polling
@@ -276,7 +270,7 @@ async function proceedPayWayCheckout() {
             currency: "USD",
         });
 
-        console.log("[KHPAY] checkout response", res);
+        // console.log("[KHPAY] checkout response", res);
 
         tranId.value = res.data.tran_id;
         const gatewayData = res.data.data;
@@ -306,45 +300,24 @@ async function proceedPayWayCheckout() {
 }
 
 async function proceedKHQRCheckout() {
-    ErrorMsg.value = "";
-    checkoutLoading.value = true;
-    isPaymentSuccess.value = false;
-    qrData.value = { qr_image: null, qr_string: null, abapay_deeplink: null };
-    stopPolling();
 
     try {
-        // Calculate total amount
-        const total = items.value.reduce((acc, item) => acc + (item.product.price * item.quantity), 0);
 
         const res = await paymentService.generateKHQR({
             shipping_address: "PP",
         });
 
-        console.log("[KHPAY QR] response", res);
-
         tranId.value = res.data.tran_id;
-        const gatewayData = res.data.data;
+        const gatewayData = res.data.data.data;
 
         if (gatewayData.payment_url) {
             window.location.href = gatewayData.payment_url;
             return;
         }
 
-        qrData.value = {
-            qr_image: gatewayData.qr_image || gatewayData.qr_code,
-            qr_string: gatewayData.qr_string || gatewayData.qr_code_string,
-            abapay_deeplink: gatewayData.deeplink,
-        };
-
-        startTimer();
-        startPolling();
-
     } catch (err) {
         console.error("[KHPAY QR] checkout error", err);
         showMessage(parseError(err), "error", "Failed");
-        ErrorMsg.value = parseError(err);
-    } finally {
-        checkoutLoading.value = false;
     }
 }
 
@@ -374,7 +347,5 @@ onMounted(() => {
 
 onUnmounted(() => {
     stopPolling();
-    if (countdown) clearInterval(countdown);
-    countdown = null;
 });
 </script>

@@ -1,20 +1,20 @@
 <?php
-
-use App\Http\Controllers\Api\ABAController;
-use App\Http\Controllers\Api\AdminDashboardController;
-use App\Http\Controllers\Api\AdminUserController;
-use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\CartController;
-use App\Http\Controllers\Api\CategoryController;
-use App\Http\Controllers\Api\CheckoutController;
-use App\Http\Controllers\Api\OrderController;
-// use App\Http\Controllers\Api\PaymentController;
-use App\Http\Controllers\Api\ProductController;
-use App\Http\Controllers\Api\RoleController;
-use App\Http\Controllers\Api\WebhookController;
-use App\Http\Controllers\PasswordController;
-use App\Http\Controllers\StockLogController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\{
+    ABAController,
+    AdminDashboardController,
+    AdminUserController,
+    AuthController,
+    CartController,
+    CategoryController,
+    CheckoutController,
+    OrderController,
+    ProductController,
+    RoleController,
+    WebhookController,
+    PasswordController,
+    StockLogController,
+};
 
 // ======= Authentication =======
 Route::prefix('v1')->group(function () {

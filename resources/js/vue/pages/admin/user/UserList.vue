@@ -98,11 +98,9 @@
                     </div>
                 </div>
 
-                <!-- Loading State -->
-                <div v-if="loading" class="flex justify-center py-12">
-                    <div class="text-center">
-                        <div class="w-12 h-12 border-4 border-slate-200 border-t-indigo-500 rounded-full animate-spin mx-auto mb-4"></div>
-                        <p class="text-slate-600 font-semibold">Loading users...</p>
+                <div v-if="loading" class="space-y-4 py-4">
+                    <div v-for="i in 10" :key="i" class="flex gap-4 px-6">
+                        <Skeleton class="rounded-3xl" width="100%" height="2.5rem" />
                     </div>
                 </div>
 
@@ -349,6 +347,7 @@
 import { ref, computed, onMounted } from "vue";
 import { useUiStore } from "../../../api/stores/uiStore.js";
 import adminService from "../../../api/services/admin/adminService.js";
+import Skeleton from "../../../components/ui/Skeleton.vue";
 
 const ui = useUiStore();
 

@@ -22,17 +22,17 @@
                 <div
                     v-for="n in 3"
                     :key="n"
-                    class="animate-pulse rounded-2xl bg-white p-6 shadow-sm"
+                    class="rounded-2xl bg-white p-6 shadow-sm"
                 >
                     <div class="flex items-center justify-between">
-                        <div class="h-4 w-32 rounded bg-gray-200"></div>
-                        <div class="h-6 w-20 rounded-full bg-gray-200"></div>
+                        <Skeleton width="8rem" height="1rem" />
+                        <Skeleton width="5rem" height="1.5rem" rounded="rounded-full" />
                     </div>
                     <div class="mt-4 flex gap-4">
-                        <div class="h-16 w-16 rounded-xl bg-gray-200"></div>
+                        <Skeleton width="4rem" height="4rem" rounded="rounded-xl" />
                         <div class="flex-1 space-y-2">
-                            <div class="h-4 w-3/4 rounded bg-gray-200"></div>
-                            <div class="h-3 w-1/2 rounded bg-gray-200"></div>
+                            <Skeleton width="75%" height="1rem" />
+                            <Skeleton width="50%" height="0.75rem" />
                         </div>
                     </div>
                 </div>
@@ -178,6 +178,7 @@ import { computed, onMounted } from "vue";
 import { useOrderStore } from "../../api/stores/orderStore";
 import { formatCurrency, formatDate } from "../../utils/formatters";
 import PaginationLinks from "../../components/PaginationLinks.vue";
+import Skeleton from "../../components/ui/Skeleton.vue";
 
 const orderStore = useOrderStore();
 

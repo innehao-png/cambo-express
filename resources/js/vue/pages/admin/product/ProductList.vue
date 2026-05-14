@@ -120,10 +120,11 @@
                     </thead>
                     <tbody>
                         <tr v-if="productStore.loading">
-                            <td colspan="7" class="px-6 py-10 text-center">
-                                <div class="flex flex-col items-center justify-center text-slate-400 italic">
-                                    <i class="fas fa-circle-notch fa-spin text-2xl mb-2 text-indigo-500"></i>
-                                    <span>Loading products...</span>
+                            <td colspan="7" class="px-6 py-4">
+                                <div class="space-y-4">
+                                    <div v-for="i in 10" :key="i" class="flex gap-4">
+                                        <Skeleton class="rounded-3xl" width="100%" height="2.5rem" />
+                                    </div>
                                 </div>
                             </td>
                         </tr>
@@ -245,6 +246,7 @@ import AlertMsg from "../../../components/messages/AlertMsg.vue";
 import Breadcrumb from "../../../components/Breadcrumb.vue";
 import { useAlert } from "../../../composables/useAlert";
 import { formatCurrency } from "../../../utils/formatters";
+import Skeleton from "../../../components/ui/Skeleton.vue";
 
 // ====== Store ====== \\
 const ui = useUiStore();

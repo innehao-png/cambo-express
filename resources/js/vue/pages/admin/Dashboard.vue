@@ -18,25 +18,13 @@
             </div>
         </div>
 
-        <!-- Loading Overlay -->
-        <div v-if="loading" class="fixed inset-0 bg-black/10 backdrop-blur-sm flex items-center justify-center z-50 rounded-2xl">
-            <div class="bg-white rounded-2xl p-8 shadow-2xl flex flex-col items-center gap-4">
-                <div class="w-12 h-12 border-4 border-slate-200 border-t-blue-500 rounded-full animate-spin"></div>
-                <p class="text-slate-600 font-semibold">Loading dashboard data...</p>
-            </div>
-        </div>
+
         <!-- Header Section -->
         <div class="mb-10 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
                 <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Dashboard Overview</h1>
                 <p class="text-slate-500 mt-1 font-medium">Welcome back, Admin! Here's what's happening today.</p>
             </div>
-            <!-- <div class="flex items-center gap-3">
-                <div class="bg-white/80 backdrop-blur-md px-4 py-2 rounded-xl shadow-sm border border-slate-200 flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-                    <span class="text-sm font-semibold text-slate-600">Live System Status</span>
-                </div>
-            </div> -->
         </div>
 
         <!-- Stats Grid -->
@@ -54,7 +42,10 @@
                         <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded-full">{{ percentChange > 0 ? '+' : '' }}{{ percentChange }}%</span>
                     </div>
                     <div class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-1">Total Accounts</div>
-                    <div class="text-4xl font-black text-slate-900 leading-none">{{ overview.users.total.toLocaleString() }}</div>
+                    <div class="text-4xl font-black text-slate-900 leading-none">
+                        <Skeleton v-if="loading" width="2.5rem" class="rounded-full" height="2.5rem" />
+                        <template v-else>{{ overview.users.total.toLocaleString() }}</template>
+                    </div>
                     <div class="mt-4 flex items-center text-xs text-slate-400">
                         <span class="font-semibold text-slate-500 mr-1">{{ overview.users.admins }}</span> Admin accounts
                     </div>
@@ -74,7 +65,10 @@
                         <span class="text-xs font-bold text-purple-600 bg-purple-50 px-2 py-1 rounded-full">{{ overview.products.total }}</span>
                     </div>
                     <div class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-1">Total Products</div>
-                    <div class="text-4xl font-black text-slate-900 leading-none">{{ overview.products.total }}</div>
+                    <div class="text-4xl font-black text-slate-900 leading-none">
+                        <Skeleton v-if="loading" width="2.5rem" class="rounded-full" height="2.5rem" />
+                        <template v-else>{{ overview.products.total }}</template>
+                    </div>
                     <div class="mt-4 flex items-center text-xs text-slate-400">
                         <span class="font-semibold text-slate-500 mr-1">{{ overview.products.low_stock }}</span> Low stock items
                     </div>
@@ -94,7 +88,10 @@
                         <span class="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-1 rounded-full">{{ overview.orders.active }}</span>
                     </div>
                     <div class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-1">Total Orders</div>
-                    <div class="text-4xl font-black text-slate-900 leading-none">{{ overview.orders.total }}</div>
+                    <div class="text-4xl font-black text-slate-900 leading-none">
+                        <Skeleton v-if="loading" width="2.5rem" class="rounded-full" height="2.5rem" />
+                        <template v-else>{{ overview.orders.total }}</template>
+                    </div>
                     <div class="mt-4 flex items-center text-xs text-slate-400">
                         <span class="font-semibold text-slate-500 mr-1">{{ overview.orders.active }}</span> Active orders
                     </div>
@@ -114,7 +111,10 @@
                         <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">+18.2%</span>
                     </div>
                     <div class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-1">Monthly Sales</div>
-                    <div class="text-4xl font-black text-slate-900 leading-none">{{ formatCurrency(salesStats.total_sales) }}</div>
+                    <div class="text-4xl font-black text-slate-900 leading-none">
+                        <Skeleton v-if="loading" width="2.5rem" class="rounded-full" height="2.5rem" />
+                        <template v-else>{{ formatCurrency(salesStats.total_sales) }}</template>
+                    </div>
                     <div class="mt-4 flex items-center text-xs text-slate-400">
                         <span class="font-semibold text-slate-500 mr-1">{{ formatCurrency(salesStats.average_order_value) }}</span> Average order value
                     </div>
@@ -141,9 +141,18 @@
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-50">
-                            <tr v-if="stockMovement.length === 0" class="hover:bg-slate-50/80 transition-colors">
+                            <tr v-if="loading && stockMovement.length === 0">
+                                <td colspan="4" class="px-6 py-4">
+                                    <div class="space-y-4">
+                                        <div v-for="i in 5" :key="i" class="flex items-center gap-4">
+                                            <Skeleton width="100%" class="rounded-3xl" height="2.5rem" />
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr v-else-if="!loading && stockMovement.length === 0" class="hover:bg-slate-50/80 transition-colors">
                                 <td colspan="4" class="px-6 py-5 text-center text-slate-500">
-                                    {{ loading ? "Loading..." : "No stock movements found" }}
+                                    No stock movements found
                                 </td>
                             </tr>
                             <tr v-for="stock in stockMovement.slice(0, 5)" :key="stock.id" class="hover:bg-slate-50/80 transition-colors group">
@@ -187,9 +196,18 @@
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-50">
-                            <tr v-if="recentOrders.length === 0" class="hover:bg-slate-50/80 transition-colors">
+                            <tr v-if="loading && recentOrders.length === 0">
+                                <td colspan="4" class="px-6 py-4">
+                                    <div class="space-y-4">
+                                        <div v-for="i in 5" :key="i" class="flex items-center gap-4">
+                                            <Skeleton width="100%" class="rounded-3xl" height="2.5rem" />
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr v-else-if="!loading && recentOrders.length === 0" class="hover:bg-slate-50/80 transition-colors">
                                 <td colspan="4" class="px-6 py-5 text-center text-slate-500">
-                                    {{ loading ? "Loading..." : "No recent orders found" }}
+                                    No recent orders found
                                 </td>
                             </tr>
                             <tr v-for="order in recentOrders" :key="order.id" class="hover:bg-slate-50/80 transition-colors group">
@@ -223,6 +241,7 @@
 import { ref, onMounted, computed } from "vue";
 import { useUiStore } from "../../api/stores/uiStore.js";
 import adminService from "../../api/services/admin/adminService.js";
+import Skeleton from "../../components/ui/Skeleton.vue";
 
 const ui = useUiStore();
 
