@@ -283,4 +283,25 @@ class CheckoutController extends Controller
             'order'  => $payment->order->fresh(),
         ], 'Payment status fetched');
     }
+
+    public function generateKHQR(Request $request)
+    {
+        $request->validate([
+            'amount' => 'required|numeric',
+            'note'   => 'nullable|string',
+        ]);
+
+        /** @var KHPAY $khpayService */
+        $khpayService = app(KHPAY::class);
+
+        $qrData = $khpayService->generateQR((float)$request->amount, $request->note);
+
+        // if (isset($qrData['message']) || !isset($qrData['qr_string'])) {
+        //     return $this->errorResponse($qrData['message'] ?? 'Failed to generate QR', 502, [
+        //         'raw' => $qrData
+        //     ]);
+        // }
+
+        return $this->successResponse($qrData, 'QR generated successfully');
+    }
 }

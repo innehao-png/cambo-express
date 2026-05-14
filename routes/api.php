@@ -106,7 +106,7 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::post('/transactions/{tran_id}/refund', [ABAController::class, 'refundTransaction']);
 
     // ======= KHPAY =======
-    Route::post('/generateQr',[ABAController::class,'generateQr']);
+    Route::post('/generateQr',[CheckoutController::class,'generateKHQR']);
 
     // ======= Webhook =======
     Route::post('/webhook/aba/callback', [WebhookController::class, 'handleCallback']);

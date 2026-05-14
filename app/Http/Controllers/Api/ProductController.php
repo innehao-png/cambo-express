@@ -80,7 +80,7 @@ class ProductController extends Controller
             'price'       => 'required|numeric|min:0',
             'stock'       => 'required|integer|min:0',
             'discount'    => 'nullable|numeric|min:0|max:100',
-            'image' => 'nullable|file|mimes:jpeg,png,jpg|max:2048'
+            'image'       => 'nullable|file|mimes:jpeg,png,jpg|max:2048'
         ]);
 
         if ($request->hasFile('image')) {
@@ -115,7 +115,7 @@ class ProductController extends Controller
             'price'       => 'numeric|min:0',
             'stock'       => 'integer|min:0',
             'discount'    => 'nullable|numeric|min:0|max:100',
-            'image' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
+            'image'       => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
             'status'      => 'in:active,inactive',
         ]);
 
