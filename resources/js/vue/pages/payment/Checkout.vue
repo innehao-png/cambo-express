@@ -84,7 +84,7 @@
                                     class="absolute inset-0 flex flex-col items-center justify-center">
                                     <i class="fa-solid fa-clock-rotate-left text-red-500 text-3xl mb-2"></i>
                                     <p class="text-red-600 font-semibold text-sm">QR Expired</p>
-                                    <button @click="handleOptionClick('payway_khpay')"
+                                    <button @click="handleOptionClick(paymentMethod)"
                                         class="mt-2 text-xs bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-full transition">
                                         Refresh
                                     </button>
@@ -252,6 +252,8 @@ function handleOptionClick(value) {
 
     if (value === "payway_khpay") {
         proceedPayWayCheckout();
+    } else if (value === "khpay_qr") {
+        proceedKHQRCheckout();
     } else {
         ErrorMsg.value = "This option is not available yet.";
         showMessage(parseError("Defect"), "error", "Failed");
@@ -278,6 +280,12 @@ async function proceedPayWayCheckout() {
 
         tranId.value = res.data.tran_id;
         const gatewayData = res.data.data;
+
+        if (gatewayData.payment_url) {
+            window.location.href = gatewayData.payment_url;
+            return;
+        }
+
         qrData.value = {
             qr_image: gatewayData.qr_image,
             qr_string: gatewayData.qr_string,
@@ -292,6 +300,49 @@ async function proceedPayWayCheckout() {
         showMessage(parseError(err), "error", "Failed");
         ErrorMsg.value = parseError(err);
         stopPolling();
+    } finally {
+        checkoutLoading.value = false;
+    }
+}
+
+async function proceedKHQRCheckout() {
+    ErrorMsg.value = "";
+    checkoutLoading.value = true;
+    isPaymentSuccess.value = false;
+    qrData.value = { qr_image: null, qr_string: null, abapay_deeplink: null };
+    stopPolling();
+
+    try {
+        // Calculate total amount
+        const total = items.value.reduce((acc, item) => acc + (item.product.price * item.quantity), 0);
+
+        const res = await paymentService.generateKHQR({
+            shipping_address: "PP",
+        });
+
+        console.log("[KHPAY QR] response", res);
+
+        tranId.value = res.data.tran_id;
+        const gatewayData = res.data.data;
+
+        if (gatewayData.payment_url) {
+            window.location.href = gatewayData.payment_url;
+            return;
+        }
+
+        qrData.value = {
+            qr_image: gatewayData.qr_image || gatewayData.qr_code,
+            qr_string: gatewayData.qr_string || gatewayData.qr_code_string,
+            abapay_deeplink: gatewayData.deeplink,
+        };
+
+        startTimer();
+        startPolling();
+
+    } catch (err) {
+        console.error("[KHPAY QR] checkout error", err);
+        showMessage(parseError(err), "error", "Failed");
+        ErrorMsg.value = parseError(err);
     } finally {
         checkoutLoading.value = false;
     }

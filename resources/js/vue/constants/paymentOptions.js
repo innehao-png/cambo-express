@@ -19,6 +19,12 @@ export const paymentOptions = [
         logo: abaBankLogo,
     },
     {
+        value: "khpay_qr",
+        label: "KHPAY QR",
+        description: "Generate dynamic QR code",
+        logo: abaBankLogo,
+    },
+    {
         value: "card",
         label: "Credit / Debit Card",
         description: "Visa, Mastercard, JCB",

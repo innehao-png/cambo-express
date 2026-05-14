@@ -286,22 +286,78 @@ class CheckoutController extends Controller
 
     public function generateKHQR(Request $request)
     {
-        $request->validate([
-            'amount' => 'required|numeric',
-            'note'   => 'nullable|string',
-        ]);
+        $user = $request->user();
 
-        /** @var KHPAY $khpayService */
-        $khpayService = app(KHPAY::class);
+        $cart = Cart::with('cart_items.product')
+            ->where('user_id', $user->id)
+            ->firstOrFail();
 
-        $qrData = $khpayService->generateQR((float)$request->amount, $request->note);
+        if ($cart->cart_items->isEmpty()) {
+            return $this->errorResponse('Cart is empty', 400);
+        }
 
-        // if (isset($qrData['message']) || !isset($qrData['qr_string'])) {
-        //     return $this->errorResponse($qrData['message'] ?? 'Failed to generate QR', 502, [
-        //         'raw' => $qrData
-        //     ]);
-        // }
+        $total = 0;
+        foreach ($cart->cart_items as $item) {
+            $total += $item->product->price * $item->quantity;
+        }
 
-        return $this->successResponse($qrData, 'QR generated successfully');
+        DB::beginTransaction();
+        try {
+            $order = Order::create([
+                'user_id'          => $user->id,
+                'total_amount'     => $total,
+                'shipping_address' => $request->input('shipping_address', 'N/A'),
+                'status'           => 'pending',
+            ]);
+
+            $tranId = 'ORD' . $order->id . '-' . substr(uniqid(), -8);
+            $order->tran_id = $tranId;
+            $order->save();
+
+            foreach ($cart->cart_items as $item) {
+                OrderItem::create([
+                    'order_id'   => $order->id,
+                    'product_id' => $item->product_id,
+                    'price'      => $item->product->price,
+                    'quantity'   => $item->quantity,
+                ]);
+            }
+
+            /** @var KHPAY $khpayService */
+            $khpayService = app(KHPAY::class);
+
+            $qrData = $khpayService->generateQR((float)$total, "Order #" . $order->id);
+
+            // if (isset($qrData['message']) || !isset($qrData['qr_string'])) {
+            //     DB::rollBack();
+            //     return $this->errorResponse($qrData['message'] ?? 'Failed to generate QR', 502, [
+            //         'raw' => $qrData
+            //     ]);
+            // }
+
+            $payment = Payment::create([
+                'order_id'    => $order->id,
+                'provider'    => 'khpay_qr',
+                'reference'   => $tranId,
+                'status'      => 'pending',
+                'khqr_string' => $qrData['qr_string'] ?? '',
+            ]);
+
+            $cart->cart_items()->delete();
+
+            DB::commit();
+
+            return $this->successResponse([
+                'order_id'   => $order->id,
+                'payment_id' => $payment->id,
+                'tran_id'    => $tranId,
+                'data'       => $qrData
+            ], 'Checkout initiated successfully');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('[KHPAY] generateKHQR exception', ['error' => $e->getMessage()]);
+            return $this->errorResponse($e->getMessage(), 500);
+        }
     }
 }

@@ -1,5 +1,9 @@
-
+import apiClient from "../../axios";
+ 
 const paymentService = {
+    generateKHQR(payload) {
+        return apiClient.post('/generateQr', payload);
+    },
     checkout(payload) {
         return apiClient.post("/checkout", payload);
     },
