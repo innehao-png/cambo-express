@@ -18,6 +18,8 @@ export const useOrderStore = defineStore("order", {
             this.error = null;
             try {
                 const response = await orderService.getOrders(page);
+                // console.log("Res:", response.data);
+
                 this.orders = response.data.data;
                 this.pagination = {
                     current_page: response.data.current_page,
@@ -25,7 +27,9 @@ export const useOrderStore = defineStore("order", {
                     per_page:     response.data.per_page,
                     total:        response.data.total,
                 };
-                this.paginationLinks = response.data.links;
+                this.paginationLinks = response.data.meta.links;
+                // console.log(this.paginationLinks);
+
             } catch (err) {
                 this.error = err.response?.data?.message ?? err.message;
                 throw err;

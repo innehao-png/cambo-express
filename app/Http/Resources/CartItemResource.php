@@ -17,15 +17,13 @@ class CartItemResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'cart_id' => $this->cart_id,
-            'product_id' => $this->product_id,
             'quantity' => $this->quantity,
             'product' => $this->whenLoaded('product', function () {
                 return [
                     'id' => $this->product->id,
                     'name' => $this->product->name,
                     'price' => $this->product->price,
-                    'image' => $this->product->image ? Storage::url($this->product->image) : null,
+                    'image' => $this->product->image ? url(Storage::url($this->product->image)) : null,
                 ];
             }),
         ];

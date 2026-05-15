@@ -25,7 +25,7 @@ class ProductResource extends JsonResource
             'stock'       => $this->stock,
             'discount'    => $this->discount,
             'status'      => $this->status,
-            'image'       => $this->image ? Storage::url($this->image) : null,
+            'image'       => $this->image ? url(Storage::url($this->image)) : null,
             // include the related category when it has been loaded
             'category_id'    => $this->whenLoaded('category', function () {
                 return $this->category ? [
