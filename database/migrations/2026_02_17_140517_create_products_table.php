@@ -20,7 +20,7 @@ return new class extends Migration
             $table->decimal('price', 10, 2)->default(0.00);
             $table->integer('stock')->default(0);
             $table->decimal('discount', 10, 2)->default(0.00);
-            $table->enum('status', ['enable', 'disable'])->default('enable');
+            $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
         });
     }

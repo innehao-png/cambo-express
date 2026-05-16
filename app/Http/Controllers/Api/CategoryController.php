@@ -12,7 +12,7 @@ class CategoryController extends Controller
     use IsAdmin;
     public function index(Request $request)
     {
-        $categories = Category::where('status', 'enable')
+        $categories = Category::where('status', 'active')
             ->withCount('products')
             ->orderBy('name')
             ->get();
@@ -50,7 +50,7 @@ class CategoryController extends Controller
 
         $category = Category::create([
             ...$validated,
-            'status' => 'enable',
+            'status' => 'active',
         ]);
 
         return response()->json([

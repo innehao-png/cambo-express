@@ -87,8 +87,8 @@
                     <div>
                         <select v-model="filterStatus" class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
                             <option value="">All Status</option>
-                            <option value="enable">Active</option>
-                            <option value="disable">Inactive</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
                         </select>
                     </div>
                     <div>
@@ -175,9 +175,9 @@
                             <td class="px-6 py-4">
                                 <span :class="[
                                     'px-3 py-1 rounded-full text-xs font-medium',
-                                    user.status === 'enable' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                                    user.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
                                 ]">
-                                    {{ user.status === 'enable' ? 'Active' : 'Inactive' }}
+                                    {{ user.status === 'active' ? 'Active' : 'Inactive' }}
                                 </span>
                             </td>
                             <td class="px-6 py-4">
@@ -286,8 +286,8 @@
                         <label class="block text-sm font-medium text-slate-700 mb-2">Status *</label>
                         <select v-model="formData.status" required
                             class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                            <option value="enable">Active</option>
-                            <option value="disable">Inactive</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
                         </select>
                     </div>
 
@@ -381,7 +381,7 @@ const formData = ref({
     phone: "",
     address: "",
     role_id: "",
-    status: "enable",
+    status: "active",
     password: "",
 });
 
@@ -463,7 +463,7 @@ const openCreateModal = () => {
         phone: "",
         address: "",
         role_id: "",
-        status: "enable",
+        status: "active",
         password: "",
     };
     showModal.value = true;
@@ -477,7 +477,7 @@ const openEditModal = (user) => {
         phone: user.phone || "",
         address: user.address || "",
         role_id: user.role?.id || "",
-        status: user.status || "enable",
+        status: user.status || "active",
         password: "",
     };
     showModal.value = true;
@@ -492,7 +492,7 @@ const closeModal = () => {
         phone: "",
         address: "",
         role_id: "",
-        status: "enable",
+        status: "active",
         password: "",
     };
 };

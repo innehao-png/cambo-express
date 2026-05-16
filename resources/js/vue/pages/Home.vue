@@ -28,7 +28,7 @@ import ProductCard from "./ProductCard.vue";
         <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
             <!-- Large Featured Block (Left) -->
             <div class="md:col-span-8 group relative rounded-3xl overflow-hidden aspect-[16/9] md:aspect-auto min-h-[400px] shadow-sm hover:shadow-2xl transition-all duration-500">
-                <img src="https://plus.unsplash.com/premium_photo-1721742733156-736e11c918bb?w=600&auto=format&fit=crop" alt="Fashion Trends" class="absolute inset-0 w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-in-out"/>
+                <img src="https://plus.unsplash.com/premium_photo-1721742733156-736e11c918bb?w=600&auto=format&fit=crop" alt="Fashion Trends" class="absolute inset-0 w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-in-out" loading="lazy"/>
                 <div class="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/30 to-transparent"></div>
                 <!-- Content -->
                 <div class="absolute inset-0 p-8 sm:p-10 flex flex-col justify-end">
@@ -43,7 +43,7 @@ import ProductCard from "./ProductCard.vue";
 
             <!-- Upper Small Block (Right) -->
             <div class="md:col-span-4 group relative rounded-3xl overflow-hidden aspect-[4/3] md:aspect-auto md:h-auto min-h-[200px] shadow-sm hover:shadow-2xl transition-all duration-500 flex flex-col">
-                <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=2670&auto=format&fit=crop" alt="Electronics" class="absolute inset-0 w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-in-out"/>
+                <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=2670&auto=format&fit=crop" alt="Electronics" class="absolute inset-0 w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-in-out" loading="lazy"/>
                 <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent"></div>
                 <div class="absolute bottom-0 left-0 p-6 w-full mt-auto">
                     <h3 class="text-2xl font-bold text-white mb-1 drop-shadow-md">Gadgets & Tech</h3>
@@ -53,7 +53,7 @@ import ProductCard from "./ProductCard.vue";
 
             <!-- Lower Small Block 1 -->
             <div class="md:col-span-4 group relative rounded-3xl overflow-hidden min-h-[200px] shadow-sm hover:shadow-2xl transition-all duration-500">
-                <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54c28?q=80&w=2687&auto=format&fit=crop" alt="Beauty Essentials" class="absolute inset-0 w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-in-out"/>
+                <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54c28?q=80&w=2687&auto=format&fit=crop" alt="Beauty Essentials" class="absolute inset-0 w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-in-out" loading="lazy"/>
                 <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent"></div>
                 <div class="absolute bottom-0 left-0 p-6 w-full">
                     <h3 class="text-xl font-bold text-white mb-1 drop-shadow-md">Beauty Essentials</h3>
@@ -62,7 +62,7 @@ import ProductCard from "./ProductCard.vue";
 
             <!-- Lower Small Block 2 -->
             <div class="md:col-span-4 group relative rounded-3xl overflow-hidden min-h-[200px] shadow-sm hover:shadow-2xl transition-all duration-500">
-                <img src="https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?q=80&w=2572&auto=format&fit=crop" alt="Men's Apparel" class="absolute inset-0 w-full h-full object-cover object-top transform group-hover:scale-105 transition-transform duration-700 ease-in-out"/>
+                <img src="https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?q=80&w=2572&auto=format&fit=crop" alt="Men's Apparel" class="absolute inset-0 w-full h-full object-cover object-top transform group-hover:scale-105 transition-transform duration-700 ease-in-out" loading="lazy"/>
                 <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent"></div>
                 <div class="absolute bottom-0 left-0 p-6 w-full">
                     <h3 class="text-xl font-bold text-white mb-1 drop-shadow-md">Men's Apparel</h3>
@@ -71,7 +71,7 @@ import ProductCard from "./ProductCard.vue";
 
              <!-- Lower Small Block 3 -->
              <div class="md:col-span-4 group relative rounded-3xl overflow-hidden min-h-[200px] shadow-sm hover:shadow-2xl transition-all duration-500">
-                <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=2670&auto=format&fit=crop" alt="Sneaker Drops" class="absolute inset-0 w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-in-out"/>
+                <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=2670&auto=format&fit=crop" alt="Sneaker Drops" class="absolute inset-0 w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-in-out" loading="lazy"/>
                 <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent"></div>
                 <div class="absolute bottom-0 left-0 p-6 w-full">
                     <h3 class="text-xl font-bold text-white mb-1 drop-shadow-md">Sneaker Drops</h3>

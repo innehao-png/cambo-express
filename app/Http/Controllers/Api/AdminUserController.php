@@ -83,7 +83,7 @@ class AdminUserController extends Controller
             'phone' => 'nullable|string|max:20',
             'password' => 'required|string|min:8',
             'role_id' => 'required|exists:roles,id',
-            'status' => 'in:enable,disable',
+            'status' => 'in:active,inactive',
             'address' => 'nullable|string',
             'profile' => 'nullable|string',
         ]);
@@ -118,7 +118,7 @@ class AdminUserController extends Controller
             'email' => ['string', 'email', Rule::unique('users')->ignore($id)],
             'phone' => 'string|max:20',
             'role_id' => 'exists:roles,id',
-            'status' => 'in:enable,disable',
+            'status' => 'in:active,inactive',
             'address' => 'nullable|string',
             'profile' => 'nullable|string',
         ]);

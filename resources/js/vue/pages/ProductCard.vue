@@ -95,6 +95,7 @@ onMounted(async () => {
                                         class="absolute inset-0 h-full w-full object-contain p-6 mix-blend-multiply transition-transform duration-500 group-hover:scale-110 dark:mix-blend-normal"
                                         :src="p.image"
                                         :alt="p.name"
+                                        loading="lazy"
                                     />
                                 </a>
 

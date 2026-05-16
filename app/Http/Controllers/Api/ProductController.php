@@ -9,6 +9,7 @@ use App\Traits\IsAdmin;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Cache;
 
 class ProductController extends Controller
 {
@@ -16,15 +17,18 @@ class ProductController extends Controller
     // Get all products with optional filters
     public function index(Request $request): AnonymousResourceCollection
     {
-
         [$sort, $order, $perPage] = $this->resolveSortingParams($request);
 
-        $products = Product::with('category')
-            ->active()
-            ->whenCategory($request->input('category_id') ?? $request->input('category'))
-            ->whenSearch($request->input('search'))
-            ->orderBy($sort, $order)
-            ->paginate($perPage);
+        $cacheKey = 'products_index_' . md5(json_encode($request->all()));
+
+        $products = Cache::remember($cacheKey, 60, function () use ($request, $sort, $order, $perPage) {
+            return Product::with('category')
+                ->active()
+                ->whenCategory($request->input('category_id') ?? $request->input('category'))
+                ->whenSearch($request->input('search'))
+                ->orderBy($sort, $order)
+                ->paginate($perPage);
+        });
 
         return ProductResource::collection($products)->additional([
             'message' => 'Products retrieved successfully'

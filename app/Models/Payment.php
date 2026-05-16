@@ -12,7 +12,6 @@ class Payment extends Model
         'khqr_string',
         'md5',
         'reference',
-        'transaction_hash',
         'status',
     ];
 

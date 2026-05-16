@@ -31,7 +31,7 @@ class CategorySeeder extends Seeder
                 ['slug' => Str::slug($categoryName)],
                 [
                     'name' => $categoryName,
-                    'status' => 'enable'
+                    'status' => 'active'
                 ]
             );
         }

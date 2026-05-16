@@ -16,8 +16,10 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->decimal('total_amount', 10, 2)->default(0.00);
             $table->text('shipping_address');
-            $table->string('transaction_reference')->nullable();
+            $table->string('tran_id')->nullable();
             $table->enum('status', ['pending', 'paid', 'shipped', 'cancelled'])->default('pending');
+            $table->string('payment_method')->default('payway');
+            $table->timestamp('paid_at')->nullable();
             $table->timestamps();
         });
     }

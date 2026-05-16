@@ -16,6 +16,7 @@ export const useProductStore = defineStore("product", {
             search: null,
             sort: null,
         },
+        lastFetched: null,
     }),
 
     getters: {
@@ -27,13 +28,18 @@ export const useProductStore = defineStore("product", {
     },
 
     actions: {
-        async fetchProducts() {
+        async fetchProducts(force = false) {
+            const now = Date.now();
+            if (!force && this.products.length > 0 && this.lastFetched && (now - this.lastFetched < 30000)) {
+                return;
+            }
+
             this.loading = true;
             try {
                 const response = await productService.getProducts(this.filters);
                 this.products = response.data.data;
                 this.pagination = response.data;
-                // console.log(this.products);
+                this.lastFetched = Date.now();
             } catch (err) {
                 this.error = err.message;
             } finally {

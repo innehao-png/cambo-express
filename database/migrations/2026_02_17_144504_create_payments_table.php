@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('order_id')->constrained()->onDelete('cascade');
             $table->string('provider');
+            $table->string('reference')->nullable();
+            $table->string('md5')->nullable();
             $table->text('khqr_string');
             $table->enum('status', ['success', 'failed', 'pending'])->default('pending');
             $table->timestamps();

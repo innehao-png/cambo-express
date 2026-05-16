@@ -5,7 +5,6 @@ namespace App\Services;
 
 class KHPAY
 {
-
     protected string $apiKey;
     protected string $apiUrl;
     protected string $API_KEY;
